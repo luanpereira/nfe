@@ -33,10 +33,13 @@ public class WSFacade {
     private final WSCancelamento wsCancelamento;
     private final WSConsultaCadastro wsConsultaCadastro;
     private final WSInutilizacao wsInutilizacao;
+    private final NFeConfig config;
 
     public WSFacade(final NFeConfig config) throws IOException, KeyManagementException, UnrecoverableKeyException, KeyStoreException, NoSuchAlgorithmException, CertificateException {
         Protocol.registerProtocol("https", new Protocol("https", new NFSocketFactory(config), 443));
 
+        this.config = config;
+        
         // inicia os servicos disponiveis da nfe
         this.wsLoteEnvio = new WSLoteEnvio(config);
         this.wsLoteConsulta = new WSLoteConsulta(config);
@@ -202,5 +205,14 @@ public class WSFacade {
      */
     public NFRetornoConsultaCadastro consultaCadastro(final String cnpj, final NFUnidadeFederativa uf) throws Exception {
         return this.wsConsultaCadastro.consultaCadastro(cnpj, uf);
+    }
+    
+    /**
+     * Recupera o NFeConfig instanciado
+     *
+     * @return NFeConfig instanciado, Ex.: SERVICO.getConfig().getAmbiente();
+     */    
+    public NFeConfig getConfig() {
+    	return config;
     }
 }
